@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { body } = require('express-validator');
+const { body,query } = require('express-validator');
 const { route } = require('./maps.routes');
 const rideControl = require('../controller/ride.controller');
 const authMiddleware = require("../middlewares/authmiddleware");
@@ -12,5 +12,11 @@ router.post('/create',authMiddleware.authUser,
     rideControl.createRide
 )
 
+router.get('/get-fare',authMiddleware.authUser,
+    query('pickup').isString().isLength({min:3}).withMessage('Invalid Pickup'),
+    query('destination').isString().isLength({min:3}).withMessage('Invalid Destination'),
+    
+    
+    rideControl.getFare)
 
 module.exports = router;

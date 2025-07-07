@@ -68,8 +68,8 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
     try {
         const response = await axios.get(url);
         if(response.status == 200){
-            // console.log(response)
-            return response.data.results
+            const formatedData = response.data.results.map((i)=>i.formatted);
+            return formatedData;
         }
         else{
             throw new Error('Unable to fetch suggestions');

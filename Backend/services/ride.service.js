@@ -5,6 +5,7 @@ const crypto = require('crypto');
 
 async function getFare(pickup, destination) {
     if (!pickup || !destination) {
+
         throw new Error("Pickup and destinations are required");
     }
 
@@ -13,15 +14,11 @@ async function getFare(pickup, destination) {
         destination
     );
 
-    const { distance, duration } = distanceTime;
-    console.log(distance);
-    console.log(duration);
-
     // Example fare calculation logic
     const baseFare = {
-        auto: 30,
-        car: 50,
-        moto: 20,
+        auto: 10,
+        car: 20,
+        moto: 15,
     };
     const perKmRate = {
         auto: 10,
@@ -37,21 +34,23 @@ async function getFare(pickup, destination) {
     // Calculate fares for each vehicle type
     const fare = {
         auto:
-            baseFare.auto +
+            (baseFare.auto +
             (distanceTime.distance.value / 1000) * perKmRate.auto +
-            (distanceTime.duration.value / 60) * perMinRate.auto,
+            (distanceTime.duration.value / 60) * perMinRate.auto).toFixed(2),
         car:
-            baseFare.car +
+            (baseFare.car +
             (distanceTime.distance.value / 1000) * perKmRate.car +
-            (distanceTime.duration.value / 60) * perMinRate.car,
+            (distanceTime.duration.value / 60) * perMinRate.car).toFixed(2),
         moto:
-            baseFare.moto +
+            (baseFare.moto +
             (distanceTime.distance.value / 1000) * perKmRate.moto +
-            (distanceTime.duration.value / 60) * perMinRate.moto,
+            (distanceTime.duration.value / 60) * perMinRate.moto).toFixed(2),
     };
 
     return fare;
 }
+
+module.exports.getFare = getFare;
 
 function getOtp(num) {
     function generateOtp(num) {
