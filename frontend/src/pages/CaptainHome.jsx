@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import CaptainDetails from "../components/CaptainDetails";
 import RidePopUp from "../components/RidePopUp";
@@ -6,12 +6,69 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
+import { useEffect } from "react";
+import { SocketContext } from "../context/SocketContext";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 const CaptainHome = () => {
     const ridePopupRef = useRef(null);
     const confirmRidePopupRef = useRef(null);
     const [ridePopupPanel, setRidePopupPanel] = useState(true);
     const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
+
+
+    const {socket} = useContext(SocketContext);
+    const {captain} = useContext(CaptainDataContext)
+
+    useEffect(()=>{
+        socket.emit("join",
+            {userId : captain._id,
+            userType : "captain"
+        })
+
+        //taking the live location of the captain 
+        /*
+        we cannot take the live location of the captain using the localhost
+        for that we have to use ports , port forwarding -> vscode provides 
+        
+        */
+    
+        const updateLocation = ()=>{
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(position=>{
+                    
+                    console.log({
+                        userId: captain._id,
+                        location:{
+                            lat:position.coords.latitude,
+                            lng:position.coords.longitude
+                        }
+                    })
+
+                    socket.emit('update-location-captain',{
+                        userId: captain._id,
+                        location:{
+                            lat:position.coords.latitude,
+                            lng:position.coords.longitude
+                        }
+                    })
+                })
+            }
+        }
+
+        const locationInterval = setInterval(updateLocation,10000);
+        updateLocation()
+
+    },[])
+
+
+    socket.on('new-ride',(data)=>{
+        // console.log("data")
+        console.log(data);
+        
+    })
+
+
 
     useGSAP(() => {
         if (ridePopupPanel) {
