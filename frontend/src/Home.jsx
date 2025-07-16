@@ -31,6 +31,7 @@ const Home = () => {
     const [activeField, setActiveField] = useState(null);
     const [fare, setFare] = useState({});
     const [vehicleType, setVehicleType] = useState(null);
+    const [ ride, setRide ] = useState(null)
 
     const {socket} = useContext(SocketContext);
     const {user} = useContext(UserDataContext)
@@ -39,6 +40,15 @@ const Home = () => {
         console.log(user)
         socket.emit("join",{userType: "user" , userId:user._id }) 
     },[user])
+
+    socket.on('ride-confirmed',ride =>{
+        console.log("called")
+        setVehicleFound(false)
+        setWaitingForDriver(true)
+        setRide(ride)
+        console.log(ride);
+    })
+
 
     const handlePickupChange = async (e) => {
         setPickup(e.target.value);
@@ -336,7 +346,11 @@ const Home = () => {
                 style={{ transform: "translateY(100%)" }}
                 className="fixed w-full z-10 bottom-0 px-3 py-6 pt-12  bg-white"
             >
-                <WaitingForDriver setWaitingForDriver={setWaitingForDriver} />
+                <WaitingForDriver
+                    ride={ride}
+                    setVehicleFound={setVehicleFound}
+                    setWaitingForDriver={setWaitingForDriver}
+                    waitingForDriver={waitingForDriver} />
             </div>
         </div>
     );

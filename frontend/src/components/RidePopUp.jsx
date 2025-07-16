@@ -22,9 +22,9 @@ const RidePopUp = (props) => {
                         src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg?semt=ais_hybrid&w=740"
                         alt=""
                     />
-                    <h2 className=" text-lg font-medium">Harsh Patel</h2>
+                    <h2 className=" text-lg font-medium p-1">{props.ride?.user.fullname.firstname + " " +props.ride?.user.fullname.lastname}</h2>
                 </div>
-                <h5 className=" text-lg font-semibold">2.2 KM</h5>
+                <h5 className=" text-lg font-semibold w-[25%] p-1">2.2 KM</h5>
             </div>
 
             <div className="flex gap-2 justify-between flex-col items-center">
@@ -35,7 +35,7 @@ const RidePopUp = (props) => {
                         <div>
                             <h3 className="text-lg font-medium">562/11-A</h3>
                             <p className="text-sm -mt-1 text-gray-600">
-                                Kankariya Talab, Bhopal
+                                {props.ride?.pickup}
                             </p>
                         </div>
                     </div>
@@ -44,14 +44,14 @@ const RidePopUp = (props) => {
                         <div>
                             <h3 className="text-lg font-medium">562/11-A</h3>
                             <p className="text-sm -mt-1 text-gray-600">
-                                Kankariya Talab, Bhopal
+                                {props.ride?.destination}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-5 p-3">
                         <i className="ri-currency-line"></i>
                         <div>
-                            <h3 className="text-lg font-medium">₹193.20 </h3>
+                            <h3 className="text-lg font-medium">₹{props.ride?.fare}</h3>
                             <p className="text-sm -mt-1 text-gray-600">
                                 Cash Cash
                             </p>
@@ -64,6 +64,7 @@ const RidePopUp = (props) => {
                     <button
                         onClick={() => {
                             props.setConfirmRidePopupPanel(true);
+                            props.confirmRide();
                         }}
                         className=" bg-green-600 w-full text-white font-semibold p-2 px-10 rounded-lg"
                     >
@@ -73,6 +74,7 @@ const RidePopUp = (props) => {
                     <button
                         onClick={() => {
                             props.setRidePopupPanel(false);
+                            
                         }}
                         className="mt-2 w-full bg-gray-300 text-gray-700 font-semibold p-2 px-10 rounded-lg"
                     >

@@ -30,7 +30,7 @@ const ConfirmRidePopUp = (props) => {
                         src="https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg?semt=ais_hybrid&w=740"
                         alt=""
                     />
-                    <h2 className=" text-lg font-medium">Harsh Patel</h2>
+                    <h2 className=" text-lg font-medium">{props.ride?.user.fullname.firstname}</h2>
                 </div>
                 <h5 className=" text-lg font-semibold">2.2 KM</h5>
             </div>
@@ -43,7 +43,7 @@ const ConfirmRidePopUp = (props) => {
                         <div>
                             <h3 className="text-lg font-medium">562/11-A</h3>
                             <p className="text-sm -mt-1 text-gray-600">
-                                Kankariya Talab, Bhopal
+                                {props.ride?.pickup}
                             </p>
                         </div>
                     </div>
@@ -52,14 +52,14 @@ const ConfirmRidePopUp = (props) => {
                         <div>
                             <h3 className="text-lg font-medium">562/11-A</h3>
                             <p className="text-sm -mt-1 text-gray-600">
-                                Kankariya Talab, Bhopal
+                                {props.ride?.destination}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-5 p-3">
                         <i className="ri-currency-line"></i>
                         <div>
-                            <h3 className="text-lg font-medium">₹193.20 </h3>
+                            <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
                             <p className="text-sm -mt-1 text-gray-600">
                                 Cash Cash
                             </p>

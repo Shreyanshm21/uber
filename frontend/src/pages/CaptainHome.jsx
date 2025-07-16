@@ -9,12 +9,14 @@ import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
 import { useEffect } from "react";
 import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
+import axios from "axios";
 
 const CaptainHome = () => {
     const ridePopupRef = useRef(null);
     const confirmRidePopupRef = useRef(null);
-    const [ridePopupPanel, setRidePopupPanel] = useState(true);
+    const [ridePopupPanel, setRidePopupPanel] = useState(false);
     const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
+    const [ride, setRide] = useState(null)
 
 
     const {socket} = useContext(SocketContext);
@@ -36,14 +38,6 @@ const CaptainHome = () => {
         const updateLocation = ()=>{
             if(navigator.geolocation){
                 navigator.geolocation.getCurrentPosition(position=>{
-                    
-                    console.log({
-                        userId: captain._id,
-                        location:{
-                            lat:position.coords.latitude,
-                            lng:position.coords.longitude
-                        }
-                    })
 
                     socket.emit('update-location-captain',{
                         userId: captain._id,
@@ -65,8 +59,30 @@ const CaptainHome = () => {
     socket.on('new-ride',(data)=>{
         // console.log("data")
         console.log(data);
+        setRide(data);
+        setRidePopupPanel(true);
         
     })
+
+
+    async function confirmRide() {
+
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+
+            rideId: ride._id,
+            captainId: captain._id,
+
+
+        }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+
+        setRidePopupPanel(false)
+        setConfirmRidePopupPanel(true)
+
+    }
 
 
 
@@ -127,7 +143,12 @@ const CaptainHome = () => {
                 style={{ transform: "translateY(100%)" }}
                 className="fixed w-full z-10 bottom-0 px-3 py-6 pt-12 translate-y-full bg-white"
             >
-                <RidePopUp setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel} />
+                <RidePopUp
+                    ride={ride}
+                    setRidePopupPanel={setRidePopupPanel}
+                    setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+                    confirmRide={confirmRide}
+                />
             </div>
 
             <div
@@ -135,7 +156,9 @@ const CaptainHome = () => {
                 style={{ transform: "translateY(100%)" }}
                 className="fixed w-full z-10 bottom-0 px-3 py-6 pt-12 translate-y-full h-screen bg-white"
             >
-                <ConfirmRidePopUp setRidePopupPanel={setRidePopupPanel}  setConfirmRidePopupPanel={setConfirmRidePopupPanel} />
+                <ConfirmRidePopUp 
+                    ride={ride}
+                    setRidePopupPanel={setRidePopupPanel}  setConfirmRidePopupPanel={setConfirmRidePopupPanel} />
             </div>
         </div>
     );
