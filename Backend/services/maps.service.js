@@ -13,8 +13,7 @@ module.exports.getAddressCoordinate = async (address) => {
                 },
             }
         );
-        // const response = await axios.get(url);
-        // console.log(response.data[0]);
+
         if (response.data || response.data.length !== 0) {
             const location = response.data[0];
             return {
@@ -48,8 +47,7 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
 
             return response.data.rows[0].elements[0];
         }
-        // console.log(response)
-        // return response.data;
+
     } catch (err) {
         console.error(err);
         throw err;

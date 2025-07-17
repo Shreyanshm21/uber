@@ -1,10 +1,29 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ConfirmRidePopUp = (props) => {
     const [otp, setOtp] = useState("");
-    const submitHandler = function (e) {
+    const navigate = useNavigate()
+
+    const submitHandler = async (e) => {
         e.preventDefault();
+
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+            params: {
+                rideId: props.ride._id,
+                otp: otp
+            },
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+
+        if (response.status === 200) {
+            props.setConfirmRidePopupPanel(false)
+            props.setRidePopupPanel(false)
+            navigate('/captain-riding', { state: { ride: props.ride } })
+        }
     };
 
     return (
@@ -72,9 +91,7 @@ const ConfirmRidePopUp = (props) => {
                 {/* Confirm Button */}
                 <div className="mt-6 w-full">
                     <form
-                        onSubmit={(e) => {
-                            submitHandler(e);
-                        }}
+                        onSubmit={submitHandler}
                     >
                         <input
                             onChange={(e) => {
@@ -85,12 +102,12 @@ const ConfirmRidePopUp = (props) => {
                             type="text"
                             placeholder="Enter OTP"
                         />
-                        <Link
-                            to="/captain-riding"
+                        <button
+
                             className="w-full flex justify-center mt-5 text-lg  bg-green-600 text-white font-semibold p-3 rounded-lg"
                         >
                             Confirm
-                        </Link>
+                        </button>
 
                         <button
                             onClick={() => {

@@ -1,7 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link , useLocation, useNavigate } from "react-router-dom";
+import { SocketContext } from "../context/SocketContext";
+import { useEffect } from "react";
+import { useContext } from "react";
+
+
 
 const Riding = () => {
+    const location = useLocation();
+    const {ride} = location.state || {};
+    const {socket} = useContext(SocketContext)
+    const navigate = useNavigate();
+
+    socket.on("ride-ended",()=>{
+        navigate('/home')
+    })
+
     return (
         <div className="h-screen">
             <Link to={'/home'} className="h-10 w-10 fixed bg-white flex items-center justify-center rounded-full right-2 top-2 ">
@@ -23,9 +37,9 @@ const Riding = () => {
                         alt=""
                     />
                     <div className="text-right">
-                        <h2 className="text-lg font-medium ">Samy</h2>
+                        <h2 className="text-lg font-medium capitalize">{ride?.captain.fullname.firstname}</h2>
                         <h4 className="text-xl font-semibold -mt-1 -mb-1">
-                            PB10 MO 0008
+                            {ride?.captain.vehicle.plate}
                         </h4>
                         <p className="text-sm text-gray-600">Venue Hynduai</p>
                     </div>
@@ -42,7 +56,7 @@ const Riding = () => {
                                     562/11-A
                                 </h3>
                                 <p className="text-sm -mt-1 text-gray-600">
-                                    Kankariya Talab, Bhopal
+                                    {ride?.destination}
                                 </p>
                             </div>
                         </div>
@@ -50,7 +64,7 @@ const Riding = () => {
                             <i className="ri-currency-line"></i>
                             <div>
                                 <h3 className="text-lg font-medium">
-                                    ₹193.20{" "}
+                                    ₹{ride?.fare}
                                 </h3>
                                 <p className="text-sm -mt-1 text-gray-600">
                                     Cash Cash

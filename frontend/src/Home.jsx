@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { use, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import axios from "axios";
@@ -10,6 +10,7 @@ import LookingForDriver from "./components/LookingForDriver";
 import WaitingForDriver from "./components/WaitingForDriver";
 import { SocketContext } from "./context/SocketContext";
 import { UserDataContext } from "./context/UserContext";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 const Home = () => {
     const [pickup, setPickup] = useState("");
@@ -32,21 +33,24 @@ const Home = () => {
     const [fare, setFare] = useState({});
     const [vehicleType, setVehicleType] = useState(null);
     const [ ride, setRide ] = useState(null)
-
+    const navigate = useNavigate()
     const {socket} = useContext(SocketContext);
     const {user} = useContext(UserDataContext)
 
     useEffect(()=>{
-        console.log(user)
         socket.emit("join",{userType: "user" , userId:user._id }) 
     },[user])
 
     socket.on('ride-confirmed',ride =>{
-        console.log("called")
+
         setVehicleFound(false)
         setWaitingForDriver(true)
         setRide(ride)
-        console.log(ride);
+    })
+
+    socket.on('ride-started',ride=>{
+        setWaitingForDriver(false);
+        navigate('/riding' ,{state : {ride}})
     })
 
 
@@ -198,7 +202,6 @@ const Home = () => {
             }
         );
 
-        console.log(response.data);
     }
 
     return (
