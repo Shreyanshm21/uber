@@ -33,10 +33,8 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
         throw new Error("Origin and Destinations are requried");
     }
 
-    const apiKey = process.env.DISTANCE_MATRIX_API;
-    const url = `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${encodeURIComponent(
-        origin
-    )}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`;
+    const apiKey = process.env.GOOGLE_MAPS_API;
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
@@ -59,18 +57,14 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
         throw new Error("Query is Required");
     }
 
-    const apiKey = process.env.AUTO_COMPLETE;
-    const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
-        input
-    )}&format=json&apiKey=${apiKey}`;
+    const apiKey = process.env.GOOGLE_MAPS_API;
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
-        if(response.status == 200){
-            const formatedData = response.data.results.map((i)=>i.formatted);
-            return formatedData;
-        }
-        else{
+        if (response.data.status === 'OK') {
+            return response.data.predictions.map(prediction => prediction.description).filter(value => value);
+        } else {
             throw new Error('Unable to fetch suggestions');
         }
     } catch (err) {

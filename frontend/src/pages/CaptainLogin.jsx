@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link ,useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CaptainDataContext } from "../context/CaptainContext";
-
+import logo from "../assets/Captain.png";
 
 
 const Captainlogin = () => {
@@ -41,8 +41,8 @@ const Captainlogin = () => {
         <div className="p-7 h-screen flex flex-col justify-between">
             <div>
                 <img
-                    className="w-20 mb-3"
-                    src="https://www.svgrepo.com/show/505031/uber-driver.svg"
+                    className="w-20 mb-4"
+                    src={logo}
                     alt=""
                 />
 

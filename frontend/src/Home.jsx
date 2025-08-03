@@ -11,7 +11,7 @@ import WaitingForDriver from "./components/WaitingForDriver";
 import { SocketContext } from "./context/SocketContext";
 import { UserDataContext } from "./context/UserContext";
 import { useNavigate, useNavigation } from "react-router-dom";
-
+import logo from "./assets/GoCab.png";
 const Home = () => {
     const [pickup, setPickup] = useState("");
     const [destination, setDestination] = useState("");
@@ -207,8 +207,8 @@ const Home = () => {
     return (
         <div className="h-screen relative overflow-hidden">
             <img
-                className="w-16 absolute left-5 top-5"
-                src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+                className="w-24 absolute left-5 top-5"
+                src={logo}
                 alt="d"
             />
 
